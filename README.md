@@ -1,4 +1,8 @@
 # chrono-persian
+
+[![c](https://img.shields.io/crates/v/chrono-persian)](https://crates.io/crates/chrono-persian)
+[![d](https://docs.rs/chrono-persian/badge.svg)](https://crates.io/crates/chrono-persian)
+
 ## About
 this crate contains a set of helper functions to convert chrono datetimes to persian (jalali) calender
 it provides a simple Trait `ToPersian` which is implemented for `NaiveDateTime`, `DateTime<Utc>` and `DateTime<Local`

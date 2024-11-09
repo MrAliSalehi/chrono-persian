@@ -1,6 +1,6 @@
 [package]
 name = "chrono-persian"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["mralisalehi"]
 description = "simple wrapper around chrono for persian(jalali) dates"
@@ -8,6 +8,8 @@ license = "MIT"
 homepage = "https://github.com/MrAliSalehi/chrono-persian"
 repository = "https://github.com/MrAliSalehi/chrono-persian"
 readme = "README.md"
+categories = ["date-and-time"]
+keywords = ["persian", "jalali", "datetime", "chrono"]
 
 
 [dependencies]
