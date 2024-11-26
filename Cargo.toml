@@ -1,6 +1,6 @@
 [package]
 name = "chrono-persian"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["mralisalehi"]
 description = "simple wrapper around chrono for persian(jalali) dates"
