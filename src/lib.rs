@@ -3,12 +3,12 @@
 //! this crate contains a set of helper functions to convert chrono datetimes to persian (jalali) calender
 //! it provides a simple Trait `ToPersian` which is implemented for `NaiveDateTime`, `DateTime<Utc>` and `DateTime<Local`
 //! ##
-//! 
+//!
 //! ## Example
 //! ```
 //!use chrono::{DateTime, Utc, Local, NaiveDateTime};
 //!use chrono_persian::ToPersian;
-//! 
+//!
 //!// convert a datetime utc
 //!let utc = "2024-11-09 22:38:28 UTC".parse::<DateTime<Utc>>().unwrap();
 //!let a = utc.to_persian().unwrap();
@@ -20,23 +20,22 @@
 //!assert_eq!(b.to_string(), "1403-08-20 02:17:54 +00:00");
 //!   
 //!//convert a naivedatetime
-//!let now = NaiveDateTime::parse_from_str("2024-11-09 23:07:00","%Y-%m-%d %H:%M:%S").unwrap();
+//!let now = NaiveDateTime::parse_from_str("2024-11-26 08:55:11","%Y-%m-%d %H:%M:%S").unwrap();
 //!let a = now.to_persian().unwrap();
-//!assert_eq!(a.to_string(),"1403-08-19 23:07:00");
-//! 
+//!assert_eq!(a.to_string(),"1403-09-06 12:25:11");
+//!
 //! ```
 
 use chrono::{DateTime, Datelike, FixedOffset, Local, NaiveDate, NaiveDateTime, TimeZone, Utc};
 use std::ops::Deref;
 use std::sync::LazyLock;
 
-
-
+static LOCAL: LazyLock<Local> = LazyLock::new(|| Local::from_offset(&FIXED_OFFSET));
 
 /// Iran's offset, already tested, so its safe to unwrap
-static LOCAL: LazyLock<Local> = LazyLock::new(|| unsafe {
-    Local::from_offset(&FixedOffset::east_opt(3 * 3600 + 1800).unwrap_unchecked())
-});
+static FIXED_OFFSET: LazyLock<FixedOffset> =
+    LazyLock::new(|| unsafe { FixedOffset::east_opt(3 * 3600 + 1800).unwrap_unchecked() });
+
 static ZERO_OFFSET: LazyLock<FixedOffset> =
     LazyLock::new(|| unsafe { FixedOffset::east_opt(0).unwrap_unchecked() });
 
@@ -91,12 +90,12 @@ impl ToPersian for NaiveDateTime {
     ///use chrono::NaiveDateTime;
     ///use chrono_persian::ToPersian;
     ///
-    ///let now = NaiveDateTime::parse_from_str("2024-11-09 23:07:00","%Y-%m-%d %H:%M:%S").unwrap();
+    ///let now = NaiveDateTime::parse_from_str("2024-11-26 08:55:11","%Y-%m-%d %H:%M:%S").unwrap();
     ///let a = now.to_persian().unwrap();
-    ///assert_eq!(a.to_string(),"1403-08-19 23:07:00");
+    ///assert_eq!(a.to_string(),"1403-09-06 12:25:11");
     /// ```
     fn to_persian(&self) -> Option<Self> {
-        let now = self.and_local_timezone(*LOCAL).earliest()?;
+        let now = DateTime::<Local>::from_naive_utc_and_offset(*self, *FIXED_OFFSET);
         let (y, m, d) = gregorian_to_jalali(now.year(), now.month(), now.day());
         Some(NaiveDateTime::new(
             NaiveDate::from_ymd_opt(y, m, d)?,
